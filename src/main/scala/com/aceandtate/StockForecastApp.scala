@@ -1,18 +1,16 @@
 package com.aceandtate
 
-import cats._
-import cats.effect._
-import cats.implicits._
-import org.http4s.circe._
-import org.http4s._
-import io.circe.generic.auto._
-import io.circe.syntax._
-import org.http4s.dsl._
-import org.http4s.dsl.impl._
-import org.http4s.headers._
-import org.http4s.implicits._
-import org.http4s.server._
+import zhttp.http._
+import zhttp.service.Server
+import zio._
 
-object StockForecastApp:
-  def main(args: Array[String]): Unit = ()
+object StockForecastApp extends App:
+  val app: HttpApp[Any, Nothing] = Http.collect {
+    case Method.GET -> Root / "forecast" / "stock" / days => Response.text(s"days = $days")
+    case Method.GET -> Root / "forecast" / "suppliers" / days => ???
+    case Method.POST -> Root / "suppliers" / "load" => ???
+  }
+
+  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
+    Server.start(8080, app.silent).exitCode
   
