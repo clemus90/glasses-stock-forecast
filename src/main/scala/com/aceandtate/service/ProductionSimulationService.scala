@@ -5,6 +5,7 @@ import com.aceandtate.model.FrameProductionSeed
 import com.aceandtate.model.Production
 import com.aceandtate.model.Supplier
 import com.aceandtate.model.SupplierTimeSummary
+import com.aceandtate.model.SuppliersSummaryContainer 
 import com.aceandtate.repository.SupplierState
 import com.aceandtate.service.GlassProductionSimulation
 import com.aceandtate.service.FrameProductionSimulation
@@ -14,7 +15,7 @@ import zio._
 
 trait ProductionSimulationService: 
   def simulateProductionTotals(days: Int): UIO[Production]
-  def simulateSupplierSummaries(days: Int): UIO[List[SupplierTimeSummary]]
+  def simulateSupplierSummaries(days: Int): UIO[SuppliersSummaryContainer]
 
 object ProductionSimulationService:
   def simulateProductionTotals(days: Int) = ZIO.serviceWith[ProductionSimulationService](_.simulateProductionTotals(days))
@@ -46,7 +47,7 @@ case class ProductionSimulationServiceFromState(state: SupplierState) extends Pr
       Production(glasses, frames) 
     )
 
-  override def simulateSupplierSummaries(days: Int): UIO[List[SupplierTimeSummary]] =
+  override def simulateSupplierSummaries(days: Int): UIO[SuppliersSummaryContainer] =
     state.getState.map(stateMap =>
       suppliersFromMap(stateMap)
         .map( supplier =>
@@ -56,7 +57,7 @@ case class ProductionSimulationServiceFromState(state: SupplierState) extends Pr
             30,
             days
           )
-          SupplierTimeSummary(supplier.copy(age = supplier.age + days), lastDay)
+          SupplierTimeSummary(supplier.name, supplier.age + days, lastDay)
         )
-    )
+  ).map(summaries => SuppliersSummaryContainer(summaries))
 
