@@ -9,6 +9,7 @@ lazy val root = project
     version := "0.1.0",
     scalaVersion := scala3Version,
     libraryDependencies ++= Seq(
-      "io.d11" %% "zhttp" % ZIOHttpVersion
+      "io.d11" %% "zhttp" % ZIOHttpVersion,
+      "org.scala-lang.modules" %% "scala-xml" % "2.0.0"
     )
   )

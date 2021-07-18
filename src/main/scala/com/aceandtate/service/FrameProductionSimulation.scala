@@ -75,4 +75,4 @@ object FrameProductionSimulation:
     days: Int
   ): Int =
     val intervals = createSimulationIntervals(days, daysToProduction)
-    aggregateFrameProduction(supplier, seed, intervals)
+    findLastDayOfProduction(supplier, seed, intervals)

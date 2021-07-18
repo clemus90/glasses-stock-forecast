@@ -8,6 +8,9 @@ trait SupplierState:
   def resetState(suppliers: List[Supplier]): UIO[Unit]
 
 object SupplierState: 
+  def getState = ZIO.serviceWith[SupplierState](_.getState)
+  def resetState(suppliers: List[Supplier]) = ZIO.serviceWith[SupplierState](_.resetState(suppliers))
+
   val live = ZLayer.succeed[SupplierState](InMemorySuppliersState())
 
 case class InMemorySuppliersState() extends SupplierState:
