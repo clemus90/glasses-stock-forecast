@@ -17,6 +17,9 @@ trait ProductionSimulationService:
   def simulateSupplierSummaries(days: Int): UIO[List[SupplierTimeSummary]]
 
 object ProductionSimulationService:
+  def simulateProductionTotals(days: Int) = ZIO.serviceWith[ProductionSimulationService](_.simulateProductionTotals(days))
+  def simulateSupplierSummaries(days: Int) = ZIO.serviceWith[ProductionSimulationService](_.simulateSupplierSummaries(days))
+
   val live = ZLayer.fromService[SupplierState, ProductionSimulationService](state => ProductionSimulationServiceFromState(state))
 
 case class ProductionSimulationServiceFromState(state: SupplierState) extends ProductionSimulationService:
